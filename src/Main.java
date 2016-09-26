@@ -11,8 +11,8 @@ import javax.imageio.ImageIO;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        //Iimage imageHelper = new ImageIml());
-        //imageHelper.read();
+        Iimage imageHelper = new ImageIml());
+        imageHelper.read();
     	
     	File input = new File("1.jpeg");
     	BufferedImage image = ImageIO.read(input);
