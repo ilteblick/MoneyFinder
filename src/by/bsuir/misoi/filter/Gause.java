@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
  */
 public class Gause implements IFilter{
     @Override
-    public void doFilter(BufferedImage original) {
-
+    public BufferedImage doFilter(BufferedImage original) {
+        return null;
     }
 }
