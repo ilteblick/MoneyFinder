@@ -1,10 +1,8 @@
 package by.bsuir.misoi.filter;
-// 23123132123123132123121231
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-
-import javax.imageio.ImageIO;
 
 public class GrayScale implements IFilter 
 {
