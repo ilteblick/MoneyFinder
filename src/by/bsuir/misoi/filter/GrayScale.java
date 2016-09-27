@@ -1,5 +1,6 @@
 package by.bsuir.misoi.filter;
 
+//lksd;lfkl;sdfl;k
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
