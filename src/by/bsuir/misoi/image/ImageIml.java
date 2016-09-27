@@ -11,20 +11,19 @@ import java.util.Scanner;
  */
 public class ImageIml implements Iimage {
     @Override
-    public void read() throws IOException {
+    public BufferedImage read() throws IOException {
         Scanner in = new Scanner(System.in);
         String name = in.nextLine();
         File file = new File(name);
 
-        BufferedImage original = ImageIO.read(file);
-
-        System.out.print("HYI");
-
-
+        return ImageIO.read(file);
     }
 
     @Override
-    public void write() {
-
+    public void write(String output, BufferedImage image) throws IOException {
+        File file = new File(output);
+        //file.getParentFile().mkdirs();
+        ImageIO.write(image, "jpg", file);
+        System.out.println("done: " + output);
     }
 }

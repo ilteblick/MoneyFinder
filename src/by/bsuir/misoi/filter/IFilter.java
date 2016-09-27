@@ -6,5 +6,5 @@ import java.awt.image.BufferedImage;
  * Created by User-PC on 21.09.2016.
  */
 public interface IFilter {
-    void doFilter(BufferedImage original);
+    BufferedImage doFilter(BufferedImage original);
 }
