@@ -2,3 +2,5 @@ out
 .idea
 1.jpeg
 result.jpg
+*.classpath
+*.project
