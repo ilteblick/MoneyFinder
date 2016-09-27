@@ -9,6 +9,7 @@ public class FilterFactory {
             case 1: return new Binarization();
             case 2: return new Median();
             case 3: return new GrayScale();
+            case 4: return new Convolution();
             default: return null;
         }
     };

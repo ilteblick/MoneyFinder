@@ -12,7 +12,7 @@ public class Main {
         Iimage imageHelper = new ImageIml();
         BufferedImage original = imageHelper.read();
         FilterFactory factory = new FilterFactory();
-        IFilter filter = factory.createFilter(3);
+        IFilter filter = factory.createFilter(4);
         BufferedImage result = filter.doFilter(original);
         imageHelper.write("result",result);
     }
