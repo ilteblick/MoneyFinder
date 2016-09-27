@@ -8,6 +8,7 @@ public class FilterFactory {
         switch (tmp){
             case 1: return new Binarization();
             case 2: return new Median();
+            case 3: return new GrayScale();
             default: return null;
         }
     };

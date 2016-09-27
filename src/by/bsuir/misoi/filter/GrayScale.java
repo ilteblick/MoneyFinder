@@ -11,16 +11,11 @@ public class GrayScale implements IFilter
 	BufferedImage image;
 	int width;
 	int height;
-	
-	public GrayScale() 
-	{
-	}
+
 
 	@Override
-	public void doFilter(BufferedImage original)
-	{
-		try 
-		{
+	public BufferedImage doFilter(BufferedImage original) throws IOException {
+
 			image = original;
 			width = image.getWidth();
 			height = image.getHeight();
@@ -39,14 +34,8 @@ public class GrayScale implements IFilter
 					image.setRGB(j,i,newColor.getRGB());
 				}
 			}
-			
-			File ouptut = new File("GrayScale.jpg");
-			ImageIO.write(image, "jpg", ouptut);
-			System.out.print("GRAY SDELALSYA !!!! kartinka sohranena v GrayScale.jpg");
-		} catch (Exception e) 
-		{
-			
-		}
+
+		return  image;
 		
 	}
 
