@@ -24,7 +24,8 @@ public class Binarization implements IFilter{
         int total = original.getHeight()*original.getWidth();
 
         float sum = 0;
-        for (int i=0 ; i<256 ; i++) sum += i * histogram[i];
+        for (int i=0 ; i<256 ; i++)
+            sum += i * histogram[i];
 
         float sumB = 0;
         int wB = 0;
@@ -42,8 +43,8 @@ public class Binarization implements IFilter{
 
             sumB += (float) (i * histogram[i]);
 
-            float mB = sumB / wB;            // Mean Background
-            float mF = (sum - sumB) / wF;    // Mean Foreground
+            float mB = sumB / wB;            //
+            float mF = (sum - sumB) / wF;    //
 
             // Calculate Between Class Variance
             float varBetween = (float)wB * (float)wF * (mB - mF) * (mB - mF);

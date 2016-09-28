@@ -16,16 +16,14 @@ public class Convolution implements IFilter {
     @Override
     public BufferedImage doFilter(BufferedImage original) throws IOException {
 
-        int n = 5;
+        int n = 3;
         byte[] imageBytes = ((DataBufferByte) original.getData().getDataBuffer()).getData();
         int width = original.getWidth();
         int height = original.getHeight();
         double[][] kernel = {
-                {0, 0, 0, 0, 0},
-                {0, -1, -1, -1, 0},
-                {0, -1, 0, -1, 0},
-                {0, -1, -1, -1, 0},
-                {0, 0, 0, 0, 0}
+                {-1,-1,-1},
+                {0,0,0},
+                {1,1,1}
         };
 
         byte[] outputBytes = new byte[imageBytes.length];
@@ -52,8 +50,8 @@ public class Convolution implements IFilter {
                         kSum += kernelVal;
                         if (kSum <= 0) kSum = 1;
 
-                        //Контролируем переполнения переменных
                         rSum /= kSum;
+
                         if (rSum < 0) rSum = 0;
                         if (rSum > 255) rSum = 255;
 
