@@ -15,7 +15,7 @@ public class Main {
         FilterFactory factory = new FilterFactory();
         IFilter filter = factory.createFilter(1);
         BufferedImage result = filter.doFilter(original);
-        Wildfire wildfire = new Wildfire(result);
+        Wildfire wildfire = new Wildfire(original);
         wildfire.findRegions();
         imageHelper.write("result",result);
     }

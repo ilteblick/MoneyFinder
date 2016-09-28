@@ -77,7 +77,7 @@ public class Binarization implements IFilter{
                 oldPixel = (pixelColor.getRed() + pixelColor.getBlue() + pixelColor
                         .getGreen()) / 3;
                 int alpha = new Color(original.getRGB(i, j)).getAlpha();
-                if (oldPixel < threshold) {
+                if (oldPixel > threshold) {
                     newPixel = 255;
                 } else {
                     newPixel = 0;
