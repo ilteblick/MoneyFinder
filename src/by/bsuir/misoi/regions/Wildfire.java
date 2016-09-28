@@ -15,15 +15,17 @@ import java.util.Stack;
  */
 public class Wildfire {
 
-    public Wildfire(BufferedImage original){
+    public Wildfire(BufferedImage original,BufferedImage lol){
         this.width = original.getWidth();
         this.height = original.getHeight();
         this.original = original;
         this.lab = new int[width][height];
+        this.lol = lol;
     }
     int width,height;
-    BufferedImage original;
+    BufferedImage original,lol;
     int[][] lab;
+
 
     public void findRegions() throws IOException {
         for(int i=0;i<width;i++){
@@ -33,15 +35,17 @@ public class Wildfire {
         }
         Stack<Point> stack = new Stack<>();
         ArrayList<Point> RegionList = new ArrayList<>();
-        int flag = 0;
+        int flag = 1;
         for(int i=1;i<width-1;i++){
             for(int j=1;j<height-1;j++) {
                 Color color = new Color(original.getRGB(i,j));
                 int pixel = color.getRed() + color.getBlue() + color.getGreen();
-                if((lab[i][j] == 0)&&(pixel <20)) {
-                    flag++;
+                if((lab[i][j] == 0)&&(pixel <100)) {
+                    //flag++;
                     lab[i][j] = flag;
-                    setFlag(i, j, flag);
+                    if(setFlag(i, j, flag)){
+                        //flag++;
+                    };
                 }
             }
         }
@@ -55,7 +59,7 @@ public class Wildfire {
 
     }
 
-    private void findSize(){
+    private void findSize() throws IOException {
 
         int xmin=999999999,xmax=-1,ymin=999999999,ymax=-1;
         for(int i=0;i<width;i++){
@@ -68,23 +72,51 @@ public class Wildfire {
                 }
             }
         }
-        System.out.print(1);
+        int newWidth = xmax-xmin+1;
+        int newHeight = ymax-ymin+1;
+        int oldPixel,newPixel;
+        BufferedImage binarized = new BufferedImage(newWidth,
+                newHeight, lol.getType());
+        for(int i=xmin;i<=xmax;i++){
+            for (int j=ymin;j<=ymax;j++){
+                Color pixelColor = new Color(lol.getRGB(i, j));
+                oldPixel = (pixelColor.getRed() + pixelColor.getBlue() + pixelColor
+                        .getGreen()) ;
+                int alpha = new Color(lol.getRGB(i, j)).getAlpha();
+                Color color = new Color(lol.getRGB(j, i));
+                if (lab[i][j] == 1) {
+                //    binarized.setRGB(i-xmin,j-ymin,lol.getRGB(i,j));
+                    newPixel = colorToRGB(alpha,pixelColor.getRed(),pixelColor.getGreen(),pixelColor.getBlue());
+                    binarized.setRGB(i-xmin,j-ymin,newPixel);
+
+                    //newPixel = colorToRGB(alpha, 0, 0, 0);
+                   // binarized.setRGB(i-xmin, j-ymin, newPixel);
+                } else {
+                    newPixel = colorToRGB(alpha, 255, 255, 255);
+                    binarized.setRGB(i-xmin, j-ymin, newPixel);
+                }
+            }
+        }
+        File ouptut = new File("result1.jpeg");
+        ImageIO.write(binarized, "jpeg", ouptut);
     }
 
 
-    private void setFlag(int x,int y, int flag){
+    private boolean setFlag(int x,int y, int flag){
         for(int k = x-1;k<=x+1;k++){
             for(int l= y-1;l<=y+1;l++){
                 Color color = new Color(original.getRGB(x,y));
                 int oldPix = color.getRed() + color.getBlue() + color.getGreen();
                 Color color1 = new Color(original.getRGB(k,l));
                 int newPix = color1.getRed() + color1.getBlue() + color1.getGreen();
-                if(((oldPix >= newPix-20) && (oldPix <= newPix+20 )) && !((x == k) && (y == l)) && (lab[k][l] == 0)){
+                if(((oldPix >= newPix-100) && (oldPix <= newPix+100 )) && !((x == k) && (y == l)) && (lab[k][l] == 0)){
                     lab[k][l] = flag;
                     setFlag(k,l,flag);
+                    return false;
                 }
             }
         }
+        return true;
     }
 
 
