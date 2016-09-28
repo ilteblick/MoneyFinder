@@ -16,7 +16,7 @@ public class Main {
         IFilter filter = factory.createFilter(1);
         BufferedImage result = filter.doFilter(original);
         Wildfire wildfire = new Wildfire(result,original);
-        wildfire.findRegions();
-        imageHelper.write("result",result);
+        BufferedImage area = wildfire.findRegions();
+        imageHelper.write("result",area);
     }
 }

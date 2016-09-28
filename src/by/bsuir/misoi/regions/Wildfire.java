@@ -27,7 +27,7 @@ public class Wildfire {
     int[][] lab;
 
 
-    public void findRegions() throws IOException {
+    public BufferedImage findRegions() throws IOException {
         for(int i=0;i<width;i++){
             for(int j=0;j<height;j++){
                 lab[i][j] =0;
@@ -55,11 +55,15 @@ public class Wildfire {
             }
             System.out.println();
         }
-        findSize();
+
+
+
+
+        return findSize();
 
     }
 
-    private void findSize() throws IOException {
+    private BufferedImage findSize() throws IOException {
 
         int xmin=999999999,xmax=-1,ymin=999999999,ymax=-1;
         for(int i=0;i<width;i++){
@@ -85,20 +89,17 @@ public class Wildfire {
                 int alpha = new Color(lol.getRGB(i, j)).getAlpha();
                 Color color = new Color(lol.getRGB(j, i));
                 if (lab[i][j] == 1) {
-                //    binarized.setRGB(i-xmin,j-ymin,lol.getRGB(i,j));
                     newPixel = colorToRGB(alpha,pixelColor.getRed(),pixelColor.getGreen(),pixelColor.getBlue());
                     binarized.setRGB(i-xmin,j-ymin,newPixel);
 
-                    //newPixel = colorToRGB(alpha, 0, 0, 0);
-                   // binarized.setRGB(i-xmin, j-ymin, newPixel);
                 } else {
                     newPixel = colorToRGB(alpha, 255, 255, 255);
                     binarized.setRGB(i-xmin, j-ymin, newPixel);
                 }
             }
         }
-        File ouptut = new File("result1.jpeg");
-        ImageIO.write(binarized, "jpeg", ouptut);
+
+        return binarized;
     }
 
 
@@ -136,6 +137,7 @@ public class Wildfire {
             }
             System.out.println();
         }
+
         File ouptut = new File("result1.jpeg");
         ImageIO.write(image, "jpeg", ouptut);
     }
