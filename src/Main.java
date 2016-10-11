@@ -2,6 +2,7 @@ import by.bsuir.misoi.filter.FilterFactory;
 import by.bsuir.misoi.filter.IFilter;
 import by.bsuir.misoi.image.Iimage;
 import by.bsuir.misoi.image.ImageIml;
+import by.bsuir.misoi.regions.Rotator;
 import by.bsuir.misoi.regions.Wildfire;
 
 import java.awt.image.BufferedImage;
@@ -12,11 +13,23 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Iimage imageHelper = new ImageIml();
         BufferedImage original = imageHelper.read();
+        
         FilterFactory factory = new FilterFactory();
         IFilter filter = factory.createFilter(1);
         BufferedImage result = filter.doFilter(original);
         Wildfire wildfire = new Wildfire(result,original);
         BufferedImage area = wildfire.findRegions();
-        imageHelper.write("result",area);
+        imageHelper.write("result_wild",area);
+        Rotator rotate = new Rotator(original);
+        /*
+         * 0.523599f = 30*
+         * 0.785398f = 45*
+         * 1.0472f   = 60*
+         * 1.5708f   = 90*
+         * 2.0944f   = 120*
+         * 6.28319f  = 360*
+         */
+        BufferedImage out = rotate.baby_spin_me_right_n_round(0.56f);
+        imageHelper.write("result_rotator",out);
     }
 }

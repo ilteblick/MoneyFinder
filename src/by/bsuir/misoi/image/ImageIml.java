@@ -21,7 +21,7 @@ public class ImageIml implements Iimage {
 
     @Override
     public void write(String output, BufferedImage image) throws IOException {
-        File ouptut = new File("result.jpeg");
+        File ouptut = new File(output + ".jpeg");
         ImageIO.write(image, "jpeg", ouptut);
     }
 }

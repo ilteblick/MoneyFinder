@@ -22,6 +22,7 @@ public class Wildfire {
         this.lab = new int[width][height];
         this.lol = lol;
     }
+    
     int width,height;
     BufferedImage original,lol;
     int[][] lab;
@@ -59,11 +60,11 @@ public class Wildfire {
 
 
 
-        return findSize();
+        return findSize(lab);
 
     }
 
-    private BufferedImage findSize() throws IOException {
+    private BufferedImage findSize(int[][] lab) throws IOException {
 
         int xmin=999999999,xmax=-1,ymin=999999999,ymax=-1;
         for(int i=0;i<width;i++){
@@ -78,23 +79,26 @@ public class Wildfire {
         }
         int newWidth = xmax-xmin+1;
         int newHeight = ymax-ymin+1;
-        int oldPixel,newPixel;
+        //int oldPixel,newPixel;
         BufferedImage binarized = new BufferedImage(newWidth,
                 newHeight, lol.getType());
         for(int i=xmin;i<=xmax;i++){
             for (int j=ymin;j<=ymax;j++){
-                Color pixelColor = new Color(lol.getRGB(i, j));
-                oldPixel = (pixelColor.getRed() + pixelColor.getBlue() + pixelColor
-                        .getGreen()) ;
-                int alpha = new Color(lol.getRGB(i, j)).getAlpha();
-                Color color = new Color(lol.getRGB(j, i));
+            	
+                //Color pixelColor = new Color(lol.getRGB(i, j));
+                //oldPixel = (pixelColor.getRed() + pixelColor.getBlue() + pixelColor
+                //        .getGreen()) ;
+                //int alpha = new Color(lol.getRGB(i, j)).getAlpha();
+                //Color color = new Color(lol.getRGB(j, i));
+                
+                
                 if (lab[i][j] == 1) {
-                    newPixel = colorToRGB(alpha,pixelColor.getRed(),pixelColor.getGreen(),pixelColor.getBlue());
-                    binarized.setRGB(i-xmin,j-ymin,newPixel);
+                    //newPixel = colorToRGB(alpha,pixelColor.getRed(),pixelColor.getGreen(),pixelColor.getBlue());
+                    binarized.setRGB(i-xmin,j-ymin,0);
 
                 } else {
-                    newPixel = colorToRGB(alpha, 255, 255, 255);
-                    binarized.setRGB(i-xmin, j-ymin, newPixel);
+                    //newPixel = colorToRGB(alpha, 255, 255, 255);
+                    binarized.setRGB(i-xmin, j-ymin, -1);
                 }
             }
         }
