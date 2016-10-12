@@ -13,6 +13,7 @@ public class Rotator {
 	private BufferedImage original = null;
 	private int width = 0, height = 0;
 	private int[][] mask = null;
+	private boolean[][] outArray = null;
 	
     public Rotator(BufferedImage image, int[][] mask){
     	original = image;
@@ -26,9 +27,11 @@ public class Rotator {
     	double angle = getRotateAngle();
     	BufferedImage output_img = new BufferedImage(width,
     			height, original.getType());
+    	outArray = new boolean[width][height];
     	
         for(int i=1;i<width-1;i++){
             for(int j=1;j<height-1;j++){
+            	outArray[i][j] = false;
             	int src_x = (int)(-Math.sin(angle)*j + Math.cos(angle)*i );
                 int src_y  = (int)(Math.cos(angle) * j + Math.sin(angle)*i );
                 int x0 = (int)(height/2 - Math.cos(angle) * height/2 + Math.sin(angle)*width/2);
@@ -38,14 +41,48 @@ public class Rotator {
                 if (( src_x>=1 )&&( src_y >= 1 )&&(src_x<=width-1)&&(src_y<=height-1))
                 {
                 	output_img.setRGB(i, j, mask[src_x][src_y]);
+                	if ( mask[src_x][src_y] != -1 )
+                		outArray[i][j] = true;
+                	else
+                		outArray[i][j] = false;
             	}
             	else
             	{
                 	output_img.setRGB(i, j, -1);
+                	outArray[i][j] = false;
             	}
             }
         }
-    	return output_img;
+        
+        int xmin=999999999,xmax=-1,ymin=999999999,ymax=-1;
+        for(int i=0;i<width;i++){
+            for(int j=0;j<height;j++) {
+                if(outArray[i][j]){
+                    if(xmin > i) xmin = i;
+                    if(xmax < i) xmax = i;
+                    if(ymin > j) ymin = j;
+                    if(ymax < j) ymax = j;
+                }
+            }
+        }
+        int newWidth = xmax-xmin+1;
+        int newHeight = ymax-ymin+1;
+        BufferedImage binarized = new BufferedImage(newWidth,
+                newHeight, original.getType());
+        for(int i=xmin;i<=xmax;i++){
+            for (int j=ymin;j<=ymax;j++){
+            	int alpha = new Color(output_img.getRGB(i, j)).getAlpha();
+                Color color = new Color(output_img.getRGB(i, j));
+                
+                if (outArray[i][j]) {
+                    int pixel = colorToRGB(alpha, color.getRed(), color.getGreen(), color.getBlue());
+                    binarized.setRGB(i-xmin,j-ymin, pixel);
+                } else {
+                    binarized.setRGB(i-xmin, j-ymin, -1);
+                }
+            }
+        }
+    	return binarized;
     }
     
     /*
@@ -90,5 +127,15 @@ public class Rotator {
         {
         	return Math.atan2(p4.y - p3.y , p4.x - p3.x);
         }
+    }
+    
+    private int colorToRGB(int alpha, int red, int green, int blue) {
+        int newPixel = 0;
+        newPixel += alpha;
+        newPixel = newPixel << 8;
+        newPixel += red; newPixel = newPixel << 8;
+        newPixel += green; newPixel = newPixel << 8;
+        newPixel += blue;
+        return newPixel;
     }
 }
