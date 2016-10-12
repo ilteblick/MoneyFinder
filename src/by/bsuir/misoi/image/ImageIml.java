@@ -14,7 +14,7 @@ public class ImageIml implements Iimage {
     public BufferedImage read() throws IOException {
 //        Scanner in = new Scanner(System.in);
 //        String name = in.nextLine();
-        File file = new File("t.jpg");
+        File file = new File("t1.jpg");
 
         return ImageIO.read(file);
     }

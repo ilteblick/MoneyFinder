@@ -21,8 +21,7 @@ public class Main {
         BufferedImage area = wildfire.findRegions();
         imageHelper.write("result_wild",area);
         
-        int[][] mask = wildfire.getMask();
-        Rotator rotate = new Rotator(original, mask);
+        Rotator rotate = new Rotator(original, wildfire.getMask());
         BufferedImage out = rotate.baby_spin_me_right_n_round();
         imageHelper.write("result_rotator",out);
         

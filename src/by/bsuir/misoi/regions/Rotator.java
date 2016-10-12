@@ -1,6 +1,9 @@
 package by.bsuir.misoi.regions;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
+
+import by.bsuir.misoi.entity.Point;
 
 /**
  * Created by NE User-PC on 12.10.2016.
@@ -20,9 +23,9 @@ public class Rotator {
     
     public BufferedImage baby_spin_me_right_n_round()
     {   
-    	float angle = getRotateAngle();
+    	double angle = getRotateAngle();
     	BufferedImage output_img = new BufferedImage(width,
-    			height, 5);
+    			height, original.getType());
     	
         for(int i=1;i<width-1;i++){
             for(int j=1;j<height-1;j++){
@@ -53,10 +56,39 @@ public class Rotator {
      * 2.0944f   = 120*
      * 6.28319f  = 360*
      */
-    private float getRotateAngle(){
+    private double getRotateAngle(){
     	// calculating 4 corners
-    	float angle = 0.785398f;
-    	return angle;
+    	
+    	// KAK ZE YA TEBYA NENAVIZY !!!
+    	Point p1 = null, p2 = null, p3 = null, p4 = null;
+    	p1 = new Point();
+    	p2 = new Point();
+    	p3 = new Point();
+    	p4 = new Point();
+    	p1.x = 99999;
+    	p2.y = 99999;
+    	p3.y = -99999;
+    	p4.x = -99999;
+  
+        for(int i=0; i<width; i++){
+            for(int j=0; j<height; j++){
+            	if ( mask[i][j] != -1 ){
+            		if ( i < p1.x ){ p1.x = i; p1.y = j; }
+            		if ( j < p2.y ){ p2.x = i; p2.y = j; }
+            		if ( j > p3.y ){ p3.x = i; p3.y = j; }
+            		if ( i > p4.x ){ p4.x = i; p4.y = j; }
+            	}
+            }
+        }
+        
+        if ( Math.sqrt((p3.x - p1.x)*(p3.x - p1.x) + (p3.y - p1.y)*(p3.y - p1.y)) > 
+        		Math.sqrt((p4.x - p3.x)*(p4.x - p3.x) + (p4.y - p3.y)*(p4.y - p3.y)))
+        {
+        	return Math.atan2((p3.y - p1.y), (p3.x - p1.x));
+        }
+        else
+        {
+        	return Math.atan2(p4.y - p3.y , p4.x - p3.x);
+        }
     }
-    
 }
