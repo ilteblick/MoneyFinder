@@ -50,12 +50,12 @@ public class Wildfire {
                 }
             }
         }
-        for(int i=0;i<width;i++){
-            for(int j=0;j<height;j++){
-                System.out.print(String.valueOf(lab[j][i])+ " ");
-            }
-            System.out.println();
-        }
+       // for(int i=0;i<width;i++){
+       //    for(int j=0;j<height;j++){
+       //         System.out.print(String.valueOf(lab[j][i])+ " ");
+       //     }
+       //     System.out.println();
+       // }
 
 
 
