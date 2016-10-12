@@ -20,18 +20,21 @@ public class Wildfire {
         this.height = original.getHeight();
         this.original = original;
         this.lab = new int[width][height];
+        this.mask = new int[width][height];
         this.lol = lol;
     }
     
     int width,height;
     BufferedImage original,lol;
     int[][] lab;
+    int[][] mask = null;
 
 
     public BufferedImage findRegions() throws IOException {
         for(int i=0;i<width;i++){
             for(int j=0;j<height;j++){
-                lab[i][j] =0;
+                lab[i][j] = 0;
+                mask[i][j] = -1;
             }
         }
         Stack<Point> stack = new Stack<>();
@@ -56,10 +59,7 @@ public class Wildfire {
        //     }
        //     System.out.println();
        // }
-
-
-
-
+        
         return findSize(lab);
 
     }
@@ -69,11 +69,11 @@ public class Wildfire {
         int xmin=999999999,xmax=-1,ymin=999999999,ymax=-1;
         for(int i=0;i<width;i++){
             for(int j=0;j<height;j++) {
-                if(lab[j][i] == 1){
-                    if(xmin > j) xmin = j;
-                    if(xmax < j) xmax = j;
-                    if(ymin > i) ymin = i;
-                    if(ymax < i) ymax = i;
+                if(lab[i][j] == 1){
+                    if(xmin > i) xmin = i;
+                    if(xmax < i) xmax = i;
+                    if(ymin > j) ymin = j;
+                    if(ymax < j) ymax = j;
                 }
             }
         }
@@ -88,24 +88,24 @@ public class Wildfire {
                 //Color pixelColor = new Color(lol.getRGB(i, j));
                 //oldPixel = (pixelColor.getRed() + pixelColor.getBlue() + pixelColor
                 //        .getGreen()) ;
-                //int alpha = new Color(lol.getRGB(i, j)).getAlpha();
-                //Color color = new Color(lol.getRGB(j, i));
-                
+                int alpha = new Color(lol.getRGB(i, j)).getAlpha();
+                Color color = new Color(lol.getRGB(i, j));
                 
                 if (lab[i][j] == 1) {
                     //newPixel = colorToRGB(alpha,pixelColor.getRed(),pixelColor.getGreen(),pixelColor.getBlue());
-                    binarized.setRGB(i-xmin,j-ymin,0);
-
+                    binarized.setRGB(i-xmin,j-ymin,-1);
+                    
+                    int pixel = colorToRGB(alpha, color.getRed(), color.getGreen(), color.getBlue());
+                    mask[i][j] = pixel;
                 } else {
                     //newPixel = colorToRGB(alpha, 255, 255, 255);
-                    binarized.setRGB(i-xmin, j-ymin, -1);
+                    binarized.setRGB(i-xmin, j-ymin,0);
                 }
             }
         }
 
         return binarized;
     }
-
 
     private boolean setFlag(int x,int y, int flag){
         for(int k = x-1;k<=x+1;k++){
@@ -124,27 +124,25 @@ public class Wildfire {
         return true;
     }
 
-
-    private void printImage() throws IOException {
-        BufferedImage image = new BufferedImage(original.getWidth(),
-                original.getHeight(), original.getType());
-        for(int i=0;i<width;i++){
-            for(int j=0;j<height;j++){
-                if(lab[i][j] == 0){
-                    int newPixel = 255;
-                    image.setRGB(i, j, newPixel);
-                }else{
-                    int newPixel = 0;
-                    image.setRGB(i, j, newPixel);
-
-                }
-            }
-            System.out.println();
-        }
-
-        File ouptut = new File("result1.jpeg");
-        ImageIO.write(image, "jpeg", ouptut);
-    }
+//    private void printImage() throws IOException {
+//        BufferedImage image = new BufferedImage(original.getWidth(),
+//                original.getHeight(), original.getType());
+//        for(int i=0;i<width;i++){
+//            for(int j=0;j<height;j++){
+//                if(mask[i][j] > -1){
+//                    int newPixel = mask[i][j];
+//                    image.setRGB(i, j, newPixel);
+//                }else{
+//                    int newPixel = mask[i][j];
+//                    image.setRGB(i, j, newPixel);
+//                }
+//            }
+//            System.out.println();
+//        }
+//
+//        File ouptut = new File("result_1337.jpeg");
+//        ImageIO.write(image, "jpeg", ouptut);
+//    }
 
     private int colorToRGB(int alpha, int red, int green, int blue) {
 
@@ -154,9 +152,11 @@ public class Wildfire {
         newPixel += red; newPixel = newPixel << 8;
         newPixel += green; newPixel = newPixel << 8;
         newPixel += blue;
-
         return newPixel;
-
+    }
+    
+    public int[][] getMask(){
+    	return mask;
     }
 
 }

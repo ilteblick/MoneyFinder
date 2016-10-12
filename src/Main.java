@@ -20,16 +20,12 @@ public class Main {
         Wildfire wildfire = new Wildfire(result,original);
         BufferedImage area = wildfire.findRegions();
         imageHelper.write("result_wild",area);
-        Rotator rotate = new Rotator(original);
-        /*
-         * 0.523599f = 30*
-         * 0.785398f = 45*
-         * 1.0472f   = 60*
-         * 1.5708f   = 90*
-         * 2.0944f   = 120*
-         * 6.28319f  = 360*
-         */
-        BufferedImage out = rotate.baby_spin_me_right_n_round(0.56f);
+        
+        int[][] mask = wildfire.getMask();
+        Rotator rotate = new Rotator(original, mask);
+        BufferedImage out = rotate.baby_spin_me_right_n_round();
         imageHelper.write("result_rotator",out);
+        
+        System.out.print("GOTOVO !");
     }
 }
