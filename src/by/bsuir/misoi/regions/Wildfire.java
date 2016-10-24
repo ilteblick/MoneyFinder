@@ -47,9 +47,9 @@ public class Wildfire {
                 if((lab[i][j] == 0)&&(pixel <100)) {
                     //flag++;
                     lab[i][j] = flag;
-                    if(setFlag(i, j, flag)){
+                    //if(setFlag(i, j, flag)){
                         //flag++;
-                    };
+                    //};
                 }
             }
         }

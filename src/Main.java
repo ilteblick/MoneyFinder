@@ -2,6 +2,7 @@ import by.bsuir.misoi.filter.FilterFactory;
 import by.bsuir.misoi.filter.IFilter;
 import by.bsuir.misoi.image.Iimage;
 import by.bsuir.misoi.image.ImageIml;
+import by.bsuir.misoi.regions.NumCutter;
 import by.bsuir.misoi.regions.Rotator;
 import by.bsuir.misoi.regions.Wildfire;
 
@@ -24,6 +25,9 @@ public class Main {
         Rotator rotate = new Rotator(original, wildfire.getMask());
         BufferedImage out = rotate.baby_spin_me_right_n_round();
         imageHelper.write("result_rotator",out);
+        
+        NumCutter cutter = new NumCutter(out);
+        imageHelper.write("result_cutter", cutter.getImage());
         
         System.out.print("GOTOVO !");
     }
