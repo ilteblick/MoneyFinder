@@ -14,14 +14,14 @@ public class ImageIml implements Iimage {
     public BufferedImage read() throws IOException {
 //        Scanner in = new Scanner(System.in);
 //        String name = in.nextLine();
-        File file = new File("2tt.jpg");
+        File file = new File("t44.jpg");
 
         return ImageIO.read(file);
     }
 
     @Override
     public void write(String output, BufferedImage image) throws IOException {
-        File ouptut = new File(output + ".jpeg");
-        ImageIO.write(image, "jpeg", ouptut);
+        File ouptut = new File(output + ".png");
+        ImageIO.write(image, "png", ouptut);
     }
 }

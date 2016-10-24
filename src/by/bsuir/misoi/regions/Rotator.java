@@ -67,8 +67,7 @@ public class Rotator {
         }
         int newWidth = xmax-xmin+1;
         int newHeight = ymax-ymin+1;
-        BufferedImage binarized = new BufferedImage(newWidth,
-                newHeight, original.getType());
+        BufferedImage binarized = new BufferedImage(newWidth, newHeight, original.getType());
         for(int i=xmin;i<=xmax;i++){
             for (int j=ymin;j<=ymax;j++){
             	int alpha = new Color(output_img.getRGB(i, j)).getAlpha();
@@ -78,7 +77,7 @@ public class Rotator {
                     int pixel = colorToRGB(alpha, color.getRed(), color.getGreen(), color.getBlue());
                     binarized.setRGB(i-xmin,j-ymin, pixel);
                 } else {
-                    binarized.setRGB(i-xmin, j-ymin, -1);
+                    binarized.setRGB(i-xmin, j-ymin, 0);
                 }
             }
         }
@@ -110,7 +109,7 @@ public class Rotator {
         for(int i=0; i<width; i++){
             for(int j=0; j<height; j++){
             	if ( mask[i][j] != -1 ){
-            		if ( i < p1.x ){ p1.x = i; p1.y = j; }
+                    if ( i < p1.x ){ p1.x = i; p1.y = j; }
             		if ( j < p2.y ){ p2.x = i; p2.y = j; }
             		if ( j > p3.y ){ p3.x = i; p3.y = j; }
             		if ( i > p4.x ){ p4.x = i; p4.y = j; }

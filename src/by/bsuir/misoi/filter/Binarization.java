@@ -78,11 +78,11 @@ public class Binarization implements IFilter{
                         .getGreen()) / 3;
                 int alpha = new Color(original.getRGB(i, j)).getAlpha();
                 if (oldPixel < threshold) {
-                    newPixel = 255;
+                    newPixel = -1;
                 } else {
                     newPixel = 0;
                 }
-                newPixel = colorToRGB(alpha, newPixel, newPixel, newPixel);
+                //newPixel = colorToRGB(alpha, newPixel, newPixel, newPixel);
                 binarized.setRGB(i, j, newPixel);
 
             }

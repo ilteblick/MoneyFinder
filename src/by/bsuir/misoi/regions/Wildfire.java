@@ -30,6 +30,9 @@ public class Wildfire {
     int[][] mask = null;
 
 
+
+
+
     public BufferedImage findRegions() throws IOException {
         for(int i=0;i<width;i++){
             for(int j=0;j<height;j++){
@@ -44,21 +47,28 @@ public class Wildfire {
             for(int j=1;j<height-1;j++) {
                 Color color = new Color(original.getRGB(i,j));
                 int pixel = color.getRed() + color.getBlue() + color.getGreen();
-                if((lab[i][j] == 0)&&(pixel <100)) {
+                if((lab[i][j] == 0)&&(pixel <10)) {
                     //flag++;
                     lab[i][j] = flag;
-                    //if(setFlag(i, j, flag)){
-                        //flag++;
-                    //};
+                    if(setFlag(i, j, flag)) {
+                        flag++;
+                    }
                 }
             }
         }
-       // for(int i=0;i<width;i++){
-       //    for(int j=0;j<height;j++){
-       //         System.out.print(String.valueOf(lab[j][i])+ " ");
-       //     }
-       //     System.out.println();
-       // }
+        int kastil;
+        if(width >= height){
+            kastil = height;
+        }else{
+            kastil = width;
+        }
+
+       for(int i=1;i<kastil-1;i++){
+           for(int j=1;j<kastil-1;j++){
+                System.out.print(String.valueOf(lab[j][i])+ " ");
+            }
+            System.out.println();
+        }
         
         return findSize(lab);
 
@@ -108,16 +118,27 @@ public class Wildfire {
     }
 
     private boolean setFlag(int x,int y, int flag){
-        for(int k = x-1;k<=x+1;k++){
-            for(int l= y-1;l<=y+1;l++){
+        for(int k = x-1;k<=x+1;k+=1){
+            for(int l= y-1;l<=y+1;l+=1){
+                if((k < 0)||(l<0) || (k>width-1) || (l>height-1)){
+                    break;
+                }
                 Color color = new Color(original.getRGB(x,y));
-                int oldPix = color.getRed() + color.getBlue() + color.getGreen();
+                int oldPix = (color.getRed() + color.getBlue() + color.getGreen())/3;
                 Color color1 = new Color(original.getRGB(k,l));
-                int newPix = color1.getRed() + color1.getBlue() + color1.getGreen();
-                if(((oldPix >= newPix-100) && (oldPix <= newPix+100 )) && !((x == k) && (y == l)) && (lab[k][l] == 0)){
+                int newPix = (color1.getRed() + color1.getBlue() + color1.getGreen())/3;
+                if(((oldPix >= newPix-5) && (oldPix <= newPix+5 )) && !((x == k) && (y == l)) && (lab[k][l] == 0 )){
                     lab[k][l] = flag;
-                    setFlag(k,l,flag);
-                    return false;
+                    if(setFlag(k,l,flag)){
+                        continue;
+                    }else{
+                    //return true;
+                    }
+                }else{
+                    if(lab[k][l] == flag){
+                      //return false;
+                    }
+                    //return true;
                 }
             }
         }
