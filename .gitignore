@@ -5,3 +5,5 @@ result.jpg
 *.classpath
 *.project
 *.jpeg
+/.settings/
+/bin/
