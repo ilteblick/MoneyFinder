@@ -6,6 +6,7 @@ import by.bsuir.misoi.regions.MiddleColor;
 import by.bsuir.misoi.regions.NumCutter;
 import by.bsuir.misoi.regions.Rotator;
 import by.bsuir.misoi.regions.Wildfire;
+import by.bsuir.perseptron.Perseptron;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -52,8 +53,10 @@ public class Main {
         Wildfire wildfire1 = new Wildfire(cut,cut);
         wildfire1.findRegions();
         ArrayList<BufferedImage> images = wildfire1.findMain();
-
         
+        Perseptron ps = new Perseptron(images);
+        ps.doPerseptron();
+                
         System.out.print("GOTOVO !");
     }
 }
