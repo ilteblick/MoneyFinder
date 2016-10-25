@@ -9,6 +9,7 @@ import by.bsuir.misoi.regions.Wildfire;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -50,6 +51,7 @@ public class Main {
 
         Wildfire wildfire1 = new Wildfire(cut,cut);
         wildfire1.findRegions();
+        ArrayList<BufferedImage> images = wildfire1.findMain();
 
         
         System.out.print("GOTOVO !");

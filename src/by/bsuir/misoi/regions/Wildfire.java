@@ -1,6 +1,7 @@
 package by.bsuir.misoi.regions;
 
 import by.bsuir.misoi.entity.Point;
+import by.bsuir.misoi.filter.Binarization;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -28,6 +29,8 @@ public class Wildfire {
     BufferedImage original,lol;
     int[][] lab;
     int[][] mask = null;
+    int flag;
+    ArrayList<BufferedImage> images = new ArrayList<>();
 
 
 
@@ -42,7 +45,7 @@ public class Wildfire {
         }
         Stack<Point> stack = new Stack<>();
         ArrayList<Point> RegionList = new ArrayList<>();
-        int flag = 1;
+        flag = 1;
         for(int i=1;i<width-1;i++){
             for(int j=1;j<height-1;j++) {
                 Color color = new Color(original.getRGB(i,j));
@@ -130,7 +133,7 @@ public class Wildfire {
                 if(((oldPix >= newPix-5) && (oldPix <= newPix+5 )) && !((x == k) && (y == l)) && (lab[k][l] == 0 )){
                     lab[k][l] = flag;
                     if(setFlag(k,l,flag)){
-                        continue;
+                        //continue;
                     }else{
                     //return true;
                     }
@@ -164,6 +167,53 @@ public class Wildfire {
 //        File ouptut = new File("result_1337.jpeg");
 //        ImageIO.write(image, "jpeg", ouptut);
 //    }
+
+
+    public ArrayList<BufferedImage> findMain() throws IOException {
+        int mas [] = new int[flag];
+        for(int i=0;i<width;i++){
+            for(int j=0;j<height;j++){
+                mas[lab[i][j]]++;
+            }
+        }
+
+        for(int z=1;z<flag;z++){
+            int xmin=999999999,xmax=-1,ymin=999999999,ymax=-1;
+            for(int i=0;i<width;i++){
+                for(int j=0;j<height;j++){
+                    if(lab[i][j] == z){
+                        if(xmin > i) xmin = i;
+                        if(xmax < i) xmax = i;
+                        if(ymin > j) ymin = j;
+                        if(ymax < j) ymax = j;
+                    }
+                }
+            }
+
+            int newWidth = xmax-xmin+1;
+            int newHeight = ymax-ymin+1;
+            //int oldPixel,newPixel;
+            BufferedImage img = new BufferedImage(newWidth, newHeight, lol.getType());
+
+            for(int i=xmin;i<=xmax;i++){
+                for (int j=ymin;j<=ymax;j++){
+                    if (lab[i][j] == z) {
+                        //newPixel = colorToRGB(alpha,pixelColor.getRed(),pixelColor.getGreen(),pixelColor.getBlue());
+                        img.setRGB(i-xmin,j-ymin,0);
+
+                    } else {
+                        //newPixel = colorToRGB(alpha, 255, 255, 255);
+                        img.setRGB(i-xmin, j-ymin,-1);
+                    }
+                }
+            }
+            images.add(img);
+            File ouptut = new File(Integer.toString(z) + ".png");
+            ImageIO.write(img, "png", ouptut);
+        }
+        return images;
+    }
+
 
     private int colorToRGB(int alpha, int red, int green, int blue) {
 
