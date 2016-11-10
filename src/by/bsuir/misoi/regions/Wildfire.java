@@ -66,12 +66,12 @@ public class Wildfire {
             kastil = width;
         }
 
-       for(int i=1;i<kastil-1;i++){
+       /*for(int i=1;i<kastil-1;i++){
            for(int j=1;j<kastil-1;j++){
                 System.out.print(String.valueOf(lab[j][i])+ " ");
             }
             System.out.println();
-        }
+        }*/
         
         return findSize(lab);
 
@@ -179,37 +179,39 @@ public class Wildfire {
 
         for(int z=1;z<flag;z++){
             int xmin=999999999,xmax=-1,ymin=999999999,ymax=-1;
-            for(int i=0;i<width;i++){
-                for(int j=0;j<height;j++){
-                    if(lab[i][j] == z){
-                        if(xmin > i) xmin = i;
-                        if(xmax < i) xmax = i;
-                        if(ymin > j) ymin = j;
-                        if(ymax < j) ymax = j;
+            if(mas[z] > 30) {
+                for (int i = 0; i < width; i++) {
+                    for (int j = 0; j < height; j++) {
+                        if (lab[i][j] == z) {
+                            if (xmin > i) xmin = i;
+                            if (xmax < i) xmax = i;
+                            if (ymin > j) ymin = j;
+                            if (ymax < j) ymax = j;
+                        }
                     }
                 }
-            }
 
-            int newWidth = xmax-xmin+1;
-            int newHeight = ymax-ymin+1;
-            //int oldPixel,newPixel;
-            BufferedImage img = new BufferedImage(newWidth, newHeight, lol.getType());
+                int newWidth = xmax - xmin + 1;
+                int newHeight = ymax - ymin + 1;
+                //int oldPixel,newPixel;
+                BufferedImage img = new BufferedImage(newWidth, newHeight, lol.getType());
 
-            for(int i=xmin;i<=xmax;i++){
-                for (int j=ymin;j<=ymax;j++){
-                    if (lab[i][j] == z) {
-                        //newPixel = colorToRGB(alpha,pixelColor.getRed(),pixelColor.getGreen(),pixelColor.getBlue());
-                        img.setRGB(i-xmin,j-ymin,0);
+                for (int i = xmin; i <= xmax; i++) {
+                    for (int j = ymin; j <= ymax; j++) {
+                        if (lab[i][j] == z) {
+                            //newPixel = colorToRGB(alpha,pixelColor.getRed(),pixelColor.getGreen(),pixelColor.getBlue());
+                            img.setRGB(i - xmin, j - ymin, 0);
 
-                    } else {
-                        //newPixel = colorToRGB(alpha, 255, 255, 255);
-                        img.setRGB(i-xmin, j-ymin,-1);
+                        } else {
+                            //newPixel = colorToRGB(alpha, 255, 255, 255);
+                            img.setRGB(i - xmin, j - ymin, -1);
+                        }
                     }
                 }
+                images.add(img);
+                File ouptut = new File(Integer.toString(z) + ".png");
+                ImageIO.write(img, "png", ouptut);
             }
-            images.add(img);
-            File ouptut = new File(Integer.toString(z) + ".png");
-            ImageIO.write(img, "png", ouptut);
         }
         return images;
     }

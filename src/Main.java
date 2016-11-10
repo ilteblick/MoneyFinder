@@ -17,6 +17,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Iimage imageHelper = new ImageIml();
         BufferedImage original = imageHelper.read();
+
+
         
         FilterFactory factory = new FilterFactory();
         IFilter filter = factory.createFilter(1);
@@ -42,7 +44,7 @@ public class Main {
         MiddleColor middleColor = new MiddleColor();
         middleColor.getColor(out);
 
-        for(int i=0;i< 2; i++){
+        for(int i=0;i< 0; i++){
             out = filter2.doFilter(out);
         }
         NumCutter cutter = new NumCutter(out);

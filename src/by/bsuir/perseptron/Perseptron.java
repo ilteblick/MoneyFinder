@@ -95,7 +95,7 @@ public class Perseptron {
 					
 				}
 			}
-			System.out.println("ETO " + counter + " na " + (int)(ball) + "Ballov");
+			System.out.println("ETO " + counter + " na " + (int)(ball) + " Ballov");
 		}
 	}
 	
