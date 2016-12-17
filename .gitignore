@@ -4,3 +4,5 @@ out
 result.jpg
 *.classpath
 *.project
+/bin/
+/.settings/
