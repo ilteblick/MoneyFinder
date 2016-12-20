@@ -1,19 +1,19 @@
 package by.bsuir.misoi.regions;
 
 import by.bsuir.misoi.entity.Point;
-import by.bsuir.misoi.filter.Binarization;
+import by.bsuir.misoi.entity.Quad;
+import javafx.scene.shape.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Stack;
 
-/**
- * Created by User-PC on 28.09.2016.
- */
+
 public class Wildfire {
 
     public Wildfire(BufferedImage original,BufferedImage lol){
@@ -25,16 +25,14 @@ public class Wildfire {
         this.lol = lol;
     }
     
-    int width,height;
-    BufferedImage original,lol;
-    int[][] lab;
-    int[][] mask = null;
-    int flag;
-    ArrayList<BufferedImage> images = new ArrayList<>();
+    private int width,height;
+    private BufferedImage original,lol;
+    private int[][] lab;
+    private int[][] mask = null;
+    private int flag;
+    //ArrayList<BufferedImage> images = new ArrayList<>();
 
-
-
-
+    BufferedImage img_orig = null;
 
     public BufferedImage findRegions() throws IOException {
         for(int i=0;i<width;i++){
@@ -43,8 +41,8 @@ public class Wildfire {
                 mask[i][j] = -1;
             }
         }
-        Stack<Point> stack = new Stack<>();
-        ArrayList<Point> RegionList = new ArrayList<>();
+        //Stack<Point> stack = new Stack<>();
+        //ArrayList<Point> RegionList = new ArrayList<>();
         flag = 1;
         for(int i=1;i<width-1;i++){
             for(int j=1;j<height-1;j++) {
@@ -59,64 +57,86 @@ public class Wildfire {
                 }
             }
         }
-        int kastil;
-        if(width >= height){
-            kastil = height;
-        }else{
-            kastil = width;
-        }
-
-       /*for(int i=1;i<kastil-1;i++){
-           for(int j=1;j<kastil-1;j++){
-                System.out.print(String.valueOf(lab[j][i])+ " ");
-            }
-            System.out.println();
-        }*/
+//        int kastil;
+//        if(width >= height){
+//            kastil = height;
+//        }else{
+//            kastil = width;
+//        }
         
         return findSize(lab);
-
     }
 
     private BufferedImage findSize(int[][] lab) throws IOException {
 
-        int xmin=999999999,xmax=-1,ymin=999999999,ymax=-1;
-        for(int i=0;i<width;i++){
-            for(int j=0;j<height;j++) {
-                if(lab[i][j] == 1){
-                    if(xmin > i) xmin = i;
-                    if(xmax < i) xmax = i;
-                    if(ymin > j) ymin = j;
-                    if(ymax < j) ymax = j;
-                }
-            }
-        }
-        int newWidth = xmax-xmin+1;
-        int newHeight = ymax-ymin+1;
-        //int oldPixel,newPixel;
-        BufferedImage binarized = new BufferedImage(newWidth,
-                newHeight, lol.getType());
-        for(int i=xmin;i<=xmax;i++){
-            for (int j=ymin;j<=ymax;j++){
-            	
-                //Color pixelColor = new Color(lol.getRGB(i, j));
-                //oldPixel = (pixelColor.getRed() + pixelColor.getBlue() + pixelColor
-                //        .getGreen()) ;
-                int alpha = new Color(lol.getRGB(i, j)).getAlpha();
-                Color color = new Color(lol.getRGB(i, j));
-                
+        int xmin = 999999999, xmax = -1, ymin = 999999999, ymax = -1;
+        int xmin_y = -1, xmax_y = -1, ymin_x = -1, ymax_x = -1;
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 if (lab[i][j] == 1) {
-                    //newPixel = colorToRGB(alpha,pixelColor.getRed(),pixelColor.getGreen(),pixelColor.getBlue());
-                    binarized.setRGB(i-xmin,j-ymin,-1);
-                    
-                    int pixel = colorToRGB(alpha, color.getRed(), color.getGreen(), color.getBlue());
-                    mask[i][j] = pixel;
-                } else {
-                    //newPixel = colorToRGB(alpha, 255, 255, 255);
-                    binarized.setRGB(i-xmin, j-ymin,0);
+                    if (xmin > i) {
+                        xmin = i;
+                        xmin_y = j;
+                    }
+                    if (xmax < i) {
+                        xmax = i;
+                        xmax_y = j;
+                    }
+                    if (ymin > j) {
+                        ymin = j;
+                        ymin_x = i;
+                    }
+                    if (ymax < j) {
+                        ymax = j;
+                        ymax_x = i;
+                    }
                 }
             }
         }
 
+        int newWidth = xmax - xmin + 1;
+        int newHeight = ymax - ymin + 1;
+
+        BufferedImage binarized = new BufferedImage(newWidth,
+                newHeight, lol.getType());
+
+        img_orig = new BufferedImage(newWidth + 50,
+                newHeight + 50, lol.getType());
+
+        for (int i = 0 ; i < 25; i++) {
+            for (int j = 0; j < 25; j++) {
+                img_orig.setRGB(i, j, Color.black.getRGB());
+                img_orig.setRGB(newWidth + 49 - i, newHeight + 49 - j, Color.black.getRGB());
+            }
+        }
+
+        Quad rect = new Quad(xmin, xmin_y, ymax_x, ymax, xmax, xmax_y, ymin_x, ymin);
+        Polygon poly = new Polygon();
+        poly.addPoint(xmin, xmin_y);
+        poly.addPoint(ymax_x, ymax);
+        poly.addPoint(xmax, xmax_y);
+        poly.addPoint(ymin_x, ymin);
+        poly.addPoint(xmin, xmin_y);
+
+        for (int i = xmin ; i <= xmax; i++) {
+            for (int j = ymin  ; j <= ymax; j++) {
+                if (lab[i][j] == 1) {
+                    binarized.setRGB(i - xmin, j - ymin, -1);
+                    mask[i][j] = lol.getRGB(i, j);
+                    img_orig.setRGB(i - xmin + 25, j - ymin + 25, lol.getRGB(i, j));
+                } else {
+                    binarized.setRGB(i - xmin, j - ymin, 0);
+                    img_orig.setRGB(i - xmin + 25, j - ymin + 25, Color.black.getRGB());
+                }
+
+                if ( rect.contains(new Point(i, j)) || rect.isContainsPoint(i, j) ||
+                        rect.isContainsPoint(new Point(i,j)) /*|| poly.contains(i, j)*/){
+                    img_orig.setRGB(i - xmin + 25, j - ymin + 25, lol.getRGB(i, j));
+                }else{
+                    //img_orig.setRGB(i - xmin + 25, j - ymin + 25, Color.black.getRGB());
+                }
+            }
+        }
         return binarized;
     }
 
@@ -148,88 +168,9 @@ public class Wildfire {
         return true;
     }
 
-//    private void printImage() throws IOException {
-//        BufferedImage image = new BufferedImage(original.getWidth(),
-//                original.getHeight(), original.getType());
-//        for(int i=0;i<width;i++){
-//            for(int j=0;j<height;j++){
-//                if(mask[i][j] > -1){
-//                    int newPixel = mask[i][j];
-//                    image.setRGB(i, j, newPixel);
-//                }else{
-//                    int newPixel = mask[i][j];
-//                    image.setRGB(i, j, newPixel);
-//                }
-//            }
-//            System.out.println();
-//        }
-//
-//        File ouptut = new File("result_1337.jpeg");
-//        ImageIO.write(image, "jpeg", ouptut);
-//    }
-
-
-    public ArrayList<BufferedImage> findMain() throws IOException {
-        int mas [] = new int[flag];
-        for(int i=0;i<width;i++){
-            for(int j=0;j<height;j++){
-                mas[lab[i][j]]++;
-            }
-        }
-
-        for(int z=1;z<flag;z++){
-            int xmin=999999999,xmax=-1,ymin=999999999,ymax=-1;
-            if(mas[z] > 30) {
-                for (int i = 0; i < width; i++) {
-                    for (int j = 0; j < height; j++) {
-                        if (lab[i][j] == z) {
-                            if (xmin > i) xmin = i;
-                            if (xmax < i) xmax = i;
-                            if (ymin > j) ymin = j;
-                            if (ymax < j) ymax = j;
-                        }
-                    }
-                }
-
-                int newWidth = xmax - xmin + 1;
-                int newHeight = ymax - ymin + 1;
-                //int oldPixel,newPixel;
-                BufferedImage img = new BufferedImage(newWidth, newHeight, lol.getType());
-
-                for (int i = xmin; i <= xmax; i++) {
-                    for (int j = ymin; j <= ymax; j++) {
-                        if (lab[i][j] == z) {
-                            //newPixel = colorToRGB(alpha,pixelColor.getRed(),pixelColor.getGreen(),pixelColor.getBlue());
-                            img.setRGB(i - xmin, j - ymin, 0);
-
-                        } else {
-                            //newPixel = colorToRGB(alpha, 255, 255, 255);
-                            img.setRGB(i - xmin, j - ymin, -1);
-                        }
-                    }
-                }
-                images.add(img);
-                File ouptut = new File(Integer.toString(z) + ".png");
-                ImageIO.write(img, "png", ouptut);
-            }
-        }
-        return images;
+    public BufferedImage getOrig() throws IOException {
+        File ouptut = new File("img_wild.png");
+        ImageIO.write(img_orig, "png", ouptut);
+        return img_orig;
     }
-
-
-    private int colorToRGB(int alpha, int red, int green, int blue) {
-
-        int newPixel = 0;
-        newPixel += alpha;
-        newPixel = newPixel << 8;
-        newPixel += red; newPixel = newPixel << 8;
-        newPixel += green; newPixel = newPixel << 8;
-        newPixel += blue;
-        return newPixel;
-    }
-    
-    public int[][] getMask(){
-    	return mask;
-    }
-
 }

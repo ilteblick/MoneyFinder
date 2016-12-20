@@ -74,8 +74,6 @@ public class Convolution implements IFilter {
         //BufferedImage image = ImageIO.read(inputStream);
 
         BufferedImage image = createRGBImage(outputBytes, width, height);
-
-
         return image;
     }
 

@@ -23,8 +23,8 @@ public class MiddleColor {
         green = green / (original.getHeight() * original.getWidth());
         blue = blue / (original.getHeight() * original.getWidth());
 
-        System.out.println("R "+red);
-        System.out.println("G " +green);
-        System.out.println("B "+ blue);
+        System.out.println(red);
+        System.out.println(green);
+        System.out.println(blue);
     }
 }

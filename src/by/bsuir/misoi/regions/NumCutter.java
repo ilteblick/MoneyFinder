@@ -8,7 +8,7 @@ public class NumCutter {
 	public NumCutter(BufferedImage image) {
 		
 		int width_orig = image.getWidth(), height_orig = image.getHeight();
-		int width_res = (int)(width_orig / 1), height_res = (int)(height_orig / 1);
+		int width_res = (int)(width_orig / 3), height_res = (int)(height_orig / 1);
 		int poz_x = width_orig - width_res, poz_y = height_orig - height_res;
 		
 		resault_image = new BufferedImage(width_res -10,

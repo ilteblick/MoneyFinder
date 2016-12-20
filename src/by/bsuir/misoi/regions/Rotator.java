@@ -2,139 +2,108 @@ package by.bsuir.misoi.regions;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-
 import by.bsuir.misoi.entity.Point;
 
-/**
- * Created by NE User-PC on 12.10.2016.
- */
 public class Rotator {
-	
-	private BufferedImage original = null;
-	private int width = 0, height = 0;
-	private int[][] mask = null;
-	private boolean[][] outArray = null;
-	
-    public Rotator(BufferedImage image, int[][] mask){
-    	original = image;
-    	width = original.getWidth();
-    	height = original.getHeight();
-    	this.mask = mask;
+    public Rotator() {
     }
-    
-    public BufferedImage baby_spin_me_right_n_round()
-    {   
-    	double angle = getRotateAngle();
-    	BufferedImage output_img = new BufferedImage(width,
-    			height, original.getType());
-    	outArray = new boolean[width][height];
-    	
-        for(int i=1;i<width-1;i++){
-            for(int j=1;j<height-1;j++){
-            	outArray[i][j] = false;
-            	int src_x = (int)(-Math.sin(angle)*j + Math.cos(angle)*i );
-                int src_y  = (int)(Math.cos(angle) * j + Math.sin(angle)*i );
-                int x0 = (int)(height/2 - Math.cos(angle) * height/2 + Math.sin(angle)*width/2);
-                int y0 = (int)(width/2 - Math.cos(angle) * width/2 - Math.sin(angle)*height/2);
-                src_x+=x0;
-                src_y+=y0;
-                if (( src_x>=1 )&&( src_y >= 1 )&&(src_x<=width-1)&&(src_y<=height-1))
-                {
-                	output_img.setRGB(i, j, mask[src_x][src_y]);
-                	if ( mask[src_x][src_y] != -1 )
-                		outArray[i][j] = true;
-                	else
-                		outArray[i][j] = false;
-            	}
-            	else
-            	{
-                	output_img.setRGB(i, j, -1);
-                	outArray[i][j] = false;
-            	}
-            }
-        }
-        
-        int xmin=999999999,xmax=-1,ymin=999999999,ymax=-1;
-        for(int i=0;i<width;i++){
-            for(int j=0;j<height;j++) {
-                if(outArray[i][j]){
-                    if(xmin > i) xmin = i;
-                    if(xmax < i) xmax = i;
-                    if(ymin > j) ymin = j;
-                    if(ymax < j) ymax = j;
-                }
-            }
-        }
-        int newWidth = xmax-xmin+1;
-        int newHeight = ymax-ymin+1;
-        BufferedImage binarized = new BufferedImage(newWidth, newHeight, original.getType());
-        for(int i=xmin;i<=xmax;i++){
-            for (int j=ymin;j<=ymax;j++){
-            	int alpha = new Color(output_img.getRGB(i, j)).getAlpha();
-                Color color = new Color(output_img.getRGB(i, j));
-                
-                if (outArray[i][j]) {
-                    int pixel = colorToRGB(alpha, color.getRed(), color.getGreen(), color.getBlue());
-                    binarized.setRGB(i-xmin,j-ymin, pixel);
+
+    public BufferedImage rotate_and_cut(BufferedImage original) {
+        int w = original.getWidth();
+        int h = original.getHeight();
+        BufferedImage rotate_img = new BufferedImage(w,
+                h, original.getType());
+
+        double angle = getRotateAngle(original);
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                double src_x = (Math.cos(angle) * i - Math.sin(angle) * j);
+                double src_y = (Math.sin(angle) * i + Math.cos(angle) * j);
+                double x0 = (h / 2 - Math.cos(angle) * h / 2 + Math.sin(angle) * w / 2);
+                double y0 = (w / 2 - Math.cos(angle) * w / 2 - Math.sin(angle) * h / 2);
+                src_x += x0;
+                src_y += y0;
+                if ((src_x >= 0) && (src_y >= 0) && ((int) src_x < w) && ((int) src_y < h)) {
+                    rotate_img.setRGB(i, j, original.getRGB((int) src_x, (int) src_y));
                 } else {
-                    binarized.setRGB(i-xmin, j-ymin, 0);
+                    rotate_img.setRGB(i, j, Color.black.getRGB());
                 }
             }
         }
-    	return binarized;
-    }
-    
-    /*
-     * 0.523599f = 30*
-     * 0.785398f = 45*
-     * 1.0472f   = 60*
-     * 1.5708f   = 90*
-     * 2.0944f   = 120*
-     * 6.28319f  = 360*
-     */
-    private double getRotateAngle(){
-    	// calculating 4 corners
-    	
-    	// KAK ZE YA TEBYA NENAVIZY !!!
-    	Point p1 = null, p2 = null, p3 = null, p4 = null;
-    	p1 = new Point();
-    	p2 = new Point();
-    	p3 = new Point();
-    	p4 = new Point();
-    	p1.x = 99999;
-    	p2.y = 99999;
-    	p3.y = -99999;
-    	p4.x = -99999;
-  
-        for(int i=0; i<width; i++){
-            for(int j=0; j<height; j++){
-            	if ( mask[i][j] != -1 ){
-                    if ( i < p1.x ){ p1.x = i; p1.y = j; }
-            		if ( j < p2.y ){ p2.x = i; p2.y = j; }
-            		if ( j > p3.y ){ p3.x = i; p3.y = j; }
-            		if ( i > p4.x ){ p4.x = i; p4.y = j; }
-            	}
+        int xmin = 999999999, xmax = -1, ymin = 999999999, ymax = -1;
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                if (rotate_img.getRGB(i, j) != Color.black.getRGB()) {
+                    if (xmin > i) xmin = i;
+                    if (xmax < i) xmax = i;
+                    if (ymin > j) ymin = j;
+                    if (ymax < j) ymax = j;
+                }
             }
         }
-        
-        if ( Math.sqrt((p3.x - p1.x)*(p3.x - p1.x) + (p3.y - p1.y)*(p3.y - p1.y)) > 
-        		Math.sqrt((p4.x - p3.x)*(p4.x - p3.x) + (p4.y - p3.y)*(p4.y - p3.y)))
-        {
-        	return Math.atan2((p3.y - p1.y), (p3.x - p1.x));
+
+        int newW = xmax - xmin + 1;
+        int newH = ymax - ymin + 1;
+
+        BufferedImage cut_img = new BufferedImage(newW, newH, original.getType());
+        for (int i = xmin; i <= xmax; i++) {
+            for (int j = ymin; j <= ymax; j++) {
+                cut_img.setRGB(i - xmin, j - ymin, rotate_img.getRGB(i, j));
+            }
         }
-        else
-        {
-        	return Math.atan2(p4.y - p3.y , p4.x - p3.x);
-        }
+        return cut_img;
     }
-    
-    private int colorToRGB(int alpha, int red, int green, int blue) {
-        int newPixel = 0;
-        newPixel += alpha;
-        newPixel = newPixel << 8;
-        newPixel += red; newPixel = newPixel << 8;
-        newPixel += green; newPixel = newPixel << 8;
-        newPixel += blue;
-        return newPixel;
+
+    private double getRotateAngle(BufferedImage img) {
+        int w = img.getWidth();
+        int h = img.getHeight();
+        Point p1, p2, p3, p4;
+        p1 = new Point(999999, 0);
+        p2 = new Point(0, 999999);
+        p3 = new Point(0, -1);
+        p4 = new Point(-1, 0);
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                if (img.getRGB(i, j) != Color.black.getRGB()) {
+                    if (i < p1.x) {
+                        p1.x = i;
+                        p1.y = j;
+                    }
+                    if (j < p2.y) {
+                        p2.x = i;
+                        p2.y = j;
+                    }
+                    if (j > p3.y) {
+                        p3.x = i;
+                        p3.y = j;
+                    }
+                    if (i > p4.x) {
+                        p4.x = i;
+                        p4.y = j;
+                    }
+                }
+            }
+        }
+        double a;
+        if (Math.sqrt((p3.x - p1.x) * (p3.x - p1.x) + (p3.y - p1.y) * (p3.y - p1.y)) >=
+                Math.sqrt((p4.x - p3.x) * (p4.x - p3.x) + (p4.y - p3.y) * (p4.y - p3.y))) {
+            a = Math.atan2((p3.y - p1.y), (p3.x - p1.x));
+        } else {
+            a = Math.atan2((p4.y - p3.y), (p4.x - p3.x));
+        }
+        return a;
+    }
+
+    public BufferedImage flipX(BufferedImage ori) {
+        int w = ori.getWidth()-1;
+        int h = ori.getHeight()-1;
+        BufferedImage out = new BufferedImage(w,
+                h, ori.getType());
+        for (int i = 1; i <= w; i++) {
+            for (int j = 1; j <= h; j++) {
+                out.setRGB(w-i, h-j, ori.getRGB(i, j));
+            }
+        }
+        return out;
     }
 }
