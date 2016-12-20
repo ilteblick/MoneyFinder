@@ -169,7 +169,7 @@ public class Wildfire {
     }
 
     public BufferedImage getOrig() throws IOException {
-        File ouptut = new File("img_wild.png");
+        File ouptut = new File("img_wild_orig.png");
         ImageIO.write(img_orig, "png", ouptut);
         return img_orig;
     }
