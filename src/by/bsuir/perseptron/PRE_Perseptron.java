@@ -57,6 +57,10 @@ public class PRE_Perseptron {
         return bi;
     }
 
+
+
+
+
     private BufferedImage cut() throws IOException {
         int n_w = (int) Math.ceil(filtered.getWidth() * 0.154);
         int n_h = (int) Math.ceil(filtered.getHeight() * 0.2);
@@ -74,7 +78,9 @@ public class PRE_Perseptron {
         return scale(out);
     }
 
-    // img for perceptron ~60x45
+
+
+    // img for perceptron
     public BufferedImage getImgForPeseptron(){
         return filtered;
     }

@@ -39,7 +39,7 @@ public class Main {
         BufferedImage for_perz = PREPerseptron.getImgForPeseptron();
         imageHelper.write("img_pre_perceptron", for_perz);
 
-        rezim_obycheniya rrr = new rezim_obycheniya(for_perz);
+        //rezim_obycheniya rrr = new rezim_obycheniya(for_perz);
 
         System.out.print("GOTOVO !");
     }
