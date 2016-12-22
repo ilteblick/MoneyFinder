@@ -6,6 +6,7 @@ import by.bsuir.misoi.regions.Rotator;
 import by.bsuir.misoi.regions.Wildfire;
 import by.bsuir.perseptron.Checker;
 import by.bsuir.perseptron.PRE_Perseptron;
+import by.bsuir.perseptron.Perseptron;
 import by.bsuir.perseptron.rezim_obycheniya;
 
 import java.awt.image.BufferedImage;
@@ -40,6 +41,7 @@ public class Main {
         imageHelper.write("img_pre_perceptron", for_perz);
 
         //rezim_obycheniya rrr = new rezim_obycheniya(for_perz);
+        Perseptron pers = new Perseptron(for_perz, che.isFront());
 
         System.out.print("GOTOVO !");
     }

@@ -45,19 +45,17 @@ public class rezim_obycheniya {
                         Color color_1 = new Color(sha.getRGB(i, j));
                         int rgb_1 = (color_1.getRed() + color_1.getGreen() + color_1.getBlue()) / 3;
                         if ( rgb_1 != 0 ){
-
+                            Color c = new Color(sha.getRGB(i, j));
+                            int red = (int)(c.getRed() * 1.5  );
+                            int green = (int)(c.getGreen() * 1.5 );
+                            int blue = (int)(c.getBlue() * 1.5 );
+                            Color newColor = new Color((red+green+blue) / 3,(red+green+blue)/3,(red+green+blue)/3);
+                            sha.setRGB(i, j,newColor.getRGB());
+                        }else{
                             Color c = new Color(sha.getRGB(i, j));
                             int red = (int)(c.getRed() + 50 );
                             int green = (int)(c.getGreen() + 50 );
-                            int blue = (int)(c.getBlue() + 50 );
-                            Color newColor = new Color((red+green+blue) / 3,(red+green+blue)/3,(red+green+blue)/3);
-                            sha.setRGB(i, j,newColor.getRGB());
-
-                        }else{
-                            Color c = new Color(sha.getRGB(i, j));
-                            int red = (int)(c.getRed() + 75 );
-                            int green = (int)(c.getGreen() + 75 );
-                            int blue = (int)(c.getBlue() + 75);
+                            int blue = (int)(c.getBlue() + 50);
                             Color newColor = new Color((red+green+blue) / 3,(red+green+blue)/3,(red+green+blue)/3);
                             sha.setRGB(i, j,newColor.getRGB());
                         }
@@ -77,9 +75,9 @@ public class rezim_obycheniya {
                         sha.setRGB(i, j, 0);
                     else {
                         Color c = new Color(img.getRGB(i, j));
-                        int red = (int)(c.getRed() - 180 );
-                        int green = (int)(c.getGreen() - 180 );
-                        int blue = (int)(c.getBlue() - 180);
+                        int red = (int)(c.getRed() * 0.2 );
+                        int green = (int)(c.getGreen() * 0.2 );
+                        int blue = (int)(c.getBlue() * 0.2);
                         Color newColor = new Color((red+green+blue) / 3,(red+green+blue)/3,(red+green+blue)/3);
                         sha.setRGB(i, j,newColor.getRGB());
                     }
